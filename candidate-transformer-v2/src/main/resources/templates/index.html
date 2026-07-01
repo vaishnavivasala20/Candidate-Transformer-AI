@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${candidate.fullName} + ' — Candidate Profile'">Candidate Profile</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+
+<!-- ===== TOP NAV BAR ===== -->
+<nav class="topnav">
+    <div class="topnav-brand">
+        <i class="bi bi-person-workspace"></i>
+        <span>Candidate Transformer AI</span>
+    </div>
+    <div class="topnav-actions">
+        <a href="/" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-arrow-left"></i> New Upload
+        </a>
+        <a href="/download/json" class="btn btn-primary btn-sm">
+            <i class="bi bi-download"></i> Download JSON
+        </a>
+    </div>
+</nav>
+
+<div class="page-wrapper">
+
+    <!-- ===== CANDIDATE HEADER CARD ===== -->
+    <div class="profile-header-card fade-in">
+        <div class="profile-header-left">
+            <img th:src="@{/images/default-avatar.svg}"
+                 class="profile-avatar"
+                 alt="Candidate Avatar"
+                 onerror="this.src='/images/avatar.png'; this.onerror=null;">
+            <div class="profile-info">
+                <h1 class="profile-name" th:text="${candidate.fullName}">Candidate Name</h1>
+                <p class="profile-headline" th:text="${candidate.headline ?: candidate.recruiterInsights?.recommendedRole ?: 'Software Engineer'}">Headline</p>
+
+                <div class="contact-row">
+                    <span th:if="${!candidate.emails.isEmpty()}">
+                        <i class="bi bi-envelope-fill"></i>
+                        <span th:text="${candidate.emails[0]}"></span>
+                    </span>
+                    <span th:if="${!candidate.phones.isEmpty()}">
+                        <i class="bi bi-telephone-fill"></i>
+                        <span th:text="${candidate.phones[0]}"></span>
+                    </span>
+                    <span th:if="${candidate.location != null and !#strings.isEmpty(candidate.location)}">
+                        <i class="bi bi-geo-alt-fill"></i>
+                        <span th:text="${candidate.location}"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-header-right">
+            <div class="score-ring">
+                <div class="score-ring-inner">
+                    <span class="score-value"
+                          th:text="${#numbers.formatDecimal(candidate.recruiterInsights?.matchScore ?: 0, 0, 0)} + '%'">0%</span>
+                    <span class="score-label">Match</span>
+                </div>
+            </div>
+            <div class="exp-badge">
+                <span class="exp-number" th:text="${candidate.yearsExperience ?: 0}">0</span>
+                <span class="exp-text" th:text="${(candidate.yearsExperience ?: 0) == 0 ? 'Fresher' : 'Yrs Exp'}">Fresher</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== PROFESSIONAL SUMMARY ===== -->
+    <div class="section-card fade-in">
+        <div class="section-header">
+            <i class="bi bi-file-person-fill"></i>
+            <h2>Professional Summary</h2>
+        </div>
+        <p class="summary-text"
+           th:text="${candidate.summary != null and !#strings.isEmpty(candidate.summary)
+                      ? candidate.summary
+                      : 'No summary available.'}">
+        </p>
+    </div>
+
+    <!-- ===== TECHNICAL SKILLS ===== -->
+    <div class="section-card fade-in" th:if="${!candidate.skills.isEmpty()}">
+        <div class="section-header">
+            <i class="bi bi-tools"></i>
+            <h2>Technical Skills</h2>
+            <span class="skills-count-badge"
+                  th:text="${candidate.skills.size()} + ' skills'">0 skills</span>
+        </div>
+        <div class="skills-container">
+            <span class="skill-pill"
+                  th:each="skill : ${candidate.skills}"
+                  th:text="${skill.name}">Skill</span>
+        </div>
+    </div>
+
+    <!-- No skills fallback -->
+    <div class="section-card fade-in" th:if="${candidate.skills.isEmpty()}">
+        <div class="section-header">
+            <i class="bi bi-tools"></i>
+            <h2>Technical Skills</h2>
+        </div>
+        <div class="no-data-block">
+            <i class="bi bi-info-circle"></i>
+            <span>No technical skills detected in the resume.</span>
+        </div>
+    </div>
+
+    <!-- ===== PROFESSIONAL EXPERIENCE ===== -->
+    <div class="section-card fade-in">
+        <div class="section-header">
+            <i class="bi bi-briefcase-fill"></i>
+            <h2>Professional Experience</h2>
+        </div>
+
+        <!-- Has experience entries -->
+        <div th:if="${!candidate.experience.isEmpty()}">
+            <div class="timeline-item" th:each="exp : ${candidate.experience}">
+                <div class="timeline-dot"></div>
+                <div class="timeline-body">
+                    <div class="timeline-title-row">
+                        <h4 class="timeline-role" th:text="${exp.title ?: 'Role'}">Role</h4>
+                        <span class="timeline-date"
+                              th:if="${exp.startDate != null or exp.endDate != null}"
+                              th:text="${(exp.startDate ?: '') + ' – ' + (exp.endDate ?: 'Present')}">
+                        </span>
+                    </div>
+                    <p class="timeline-company"
+                       th:if="${exp.company != null and !#strings.isEmpty(exp.company)}"
+                       th:text="${exp.company}">Company</p>
+                    <p class="timeline-summary"
+                       th:if="${exp.summary != null and !#strings.isEmpty(exp.summary)}"
+                       th:text="${exp.summary}">Summary</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- No experience -->
+        <div th:if="${candidate.experience.isEmpty()}" class="no-data-block">
+            <i class="bi bi-info-circle"></i>
+            <span>No professional experience found. Fresher profile.</span>
+        </div>
+    </div>
+
+    <!-- ===== EDUCATION ===== -->
+    <div class="section-card fade-in">
+        <div class="section-header">
+            <i class="bi bi-mortarboard-fill"></i>
+            <h2>Education</h2>
+        </div>
+
+        <div th:if="${!candidate.education.isEmpty()}">
+            <div class="edu-grid">
+                <div class="edu-card" th:each="edu : ${candidate.education}">
+                    <div class="edu-icon"><i class="bi bi-building"></i></div>
+                    <div class="edu-details">
+                        <h4 th:text="${edu.degree ?: 'Degree'}">Degree</h4>
+                        <p th:if="${edu.field != null and !#strings.isEmpty(edu.field)}">
+                            <i class="bi bi-bookmark-fill"></i>
+                            <span th:text="${edu.field}"></span>
+                        </p>
+                        <p th:if="${edu.institution != null and !#strings.isEmpty(edu.institution)}">
+                            <i class="bi bi-geo-alt"></i>
+                            <span th:text="${edu.institution}"></span>
+                        </p>
+                        <p th:if="${edu.endYear != null}">
+                            <i class="bi bi-calendar-check"></i>
+                            Graduation: <span th:text="${edu.endYear}"></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${candidate.education.isEmpty()}" class="no-data-block">
+            <i class="bi bi-info-circle"></i>
+            <span>No education information found in resume.</span>
+        </div>
+    </div>
+
+    <!-- ===== AI RECRUITER INSIGHTS ===== -->
+    <div class="section-card fade-in" th:if="${candidate.recruiterInsights != null}">
+        <div class="section-header ai-header">
+            <i class="bi bi-robot"></i>
+            <h2>AI Recruiter Insights</h2>
+            <span class="ai-badge">AI-Powered</span>
+        </div>
+
+        <div class="insights-grid">
+
+            <!-- Strengths -->
+            <div class="insight-panel strength-panel">
+                <h5><i class="bi bi-check-circle-fill"></i> Candidate Strengths</h5>
+                <ul class="insight-list" th:if="${!candidate.recruiterInsights.strengths.isEmpty()}">
+                    <li th:each="s : ${candidate.recruiterInsights.strengths}" th:text="${s}"></li>
+                </ul>
+                <p class="no-data-inline" th:if="${candidate.recruiterInsights.strengths.isEmpty()}">
+                    No specific strengths detected.
+                </p>
+            </div>
+
+            <!-- Missing Skills -->
+            <div class="insight-panel missing-panel">
+                <h5><i class="bi bi-exclamation-triangle-fill"></i> Skill Gaps</h5>
+                <ul class="insight-list" th:if="${!candidate.recruiterInsights.missingSkills.isEmpty()}">
+                    <li th:each="m : ${candidate.recruiterInsights.missingSkills}" th:text="${m}"></li>
+                </ul>
+                <p class="no-data-inline" th:if="${candidate.recruiterInsights.missingSkills.isEmpty()}">
+                    No critical gaps identified for this role.
+                </p>
+            </div>
+
+            <!-- Role & Completeness -->
+            <div class="insight-panel role-panel">
+                <h5><i class="bi bi-person-badge-fill"></i> Suggested Role</h5>
+                <span class="role-tag" th:text="${candidate.recruiterInsights.recommendedRole}">Role</span>
+
+                <h5 class="mt-4"><i class="bi bi-bar-chart-fill"></i> Profile Completeness</h5>
+                <div class="completeness-bar-wrap">
+                    <div class="completeness-bar">
+                        <div class="completeness-fill"
+                             th:style="'width:' + ${candidate.recruiterInsights.profileCompleteness} + '%'"
+                             th:classappend="${candidate.recruiterInsights.profileCompleteness >= 75 ? 'fill-green' :
+                                              candidate.recruiterInsights.profileCompleteness >= 50 ? 'fill-orange' : 'fill-red'}">
+                        </div>
+                    </div>
+                    <span class="completeness-pct"
+                          th:text="${candidate.recruiterInsights.profileCompleteness} + '%'">0%</span>
+                </div>
+            </div>
+
+            <!-- Recommendation -->
+            <div class="insight-panel recommendation-panel">
+                <h5><i class="bi bi-lightbulb-fill"></i> Recruiter Recommendation</h5>
+                <div class="match-score-display">
+                    <span class="match-score-num"
+                          th:text="${#numbers.formatDecimal(candidate.recruiterInsights.matchScore, 0, 0)} + '%'">0%</span>
+                    <span class="match-score-label">Match Score</span>
+                </div>
+                <p class="recommendation-text"
+                   th:text="${candidate.recruiterInsights.recommendation}">Recommendation</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ===== DOWNLOAD ===== -->
+    <div class="download-section fade-in">
+        <a href="/download/json" class="btn btn-primary btn-lg">
+            <i class="bi bi-download"></i> Download Candidate JSON
+        </a>
+        <a href="/" class="btn btn-outline-secondary btn-lg">
+            <i class="bi bi-arrow-clockwise"></i> Upload Another
+        </a>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="page-footer">
+        <span><strong>Candidate Transformer AI</strong></span>
+        <span class="footer-sep">·</span>
+        <span>AI Resume Parsing</span>
+        <span class="footer-sep">·</span>
+        <span>CSV Integration</span>
+        <span class="footer-sep">·</span>
+        <span>Recruiter Intelligence</span>
+    </footer>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

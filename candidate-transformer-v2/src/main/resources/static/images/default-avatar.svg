@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="100" fill="#EFF6FF"/>
+  <!-- Subtle gradient overlay -->
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#DBEAFE"/>
+      <stop offset="100%" stop-color="#BFDBFE"/>
+    </radialGradient>
+  </defs>
+  <circle cx="100" cy="100" r="100" fill="url(#bgGrad)"/>
+  <!-- Head -->
+  <circle cx="100" cy="78" r="30" fill="#93C5FD"/>
+  <!-- Body / shoulders -->
+  <ellipse cx="100" cy="155" rx="46" ry="34" fill="#93C5FD"/>
+  <!-- Clip to outer circle -->
+  <clipPath id="clip">
+    <circle cx="100" cy="100" r="98"/>
+  </clipPath>
+  <g clip-path="url(#clip)">
+    <circle cx="100" cy="78" r="30" fill="#60A5FA"/>
+    <ellipse cx="100" cy="160" rx="50" ry="38" fill="#60A5FA"/>
+  </g>
+  <!-- Outer border ring -->
+  <circle cx="100" cy="100" r="97" fill="none" stroke="#BFDBFE" stroke-width="3"/>
+</svg>

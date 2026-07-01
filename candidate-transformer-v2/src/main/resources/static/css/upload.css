@@ -1,0 +1,310 @@
+/* =============================================================
+   Candidate Transformer AI — Upload Page Stylesheet
+   Style: Clean, Corporate, ATS-inspired
+   ============================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --primary:       #2563eb;
+    --primary-dark:  #1d4ed8;
+    --primary-light: #dbeafe;
+    --text-dark:     #111827;
+    --text-muted:    #6b7280;
+    --border:        #e5e7eb;
+    --bg:            #f9fafb;
+    --card-bg:       #ffffff;
+    --radius-md:     14px;
+    --radius-lg:     20px;
+    --shadow-lg:     0 20px 60px rgba(0, 0, 0, 0.12);
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: #f0f4ff;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+/* ---------------------------------------------------------------
+   BACKGROUND DECORATION
+--------------------------------------------------------------- */
+.page-bg {
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(ellipse at 15% 20%, rgba(37, 99, 235, 0.10) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 80%, rgba(99, 102, 241, 0.08) 0%, transparent 55%),
+        #f0f4ff;
+    z-index: 0;
+}
+
+/* ---------------------------------------------------------------
+   UPLOAD CARD
+--------------------------------------------------------------- */
+.upload-wrapper {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 600px;
+    animation: fadeUp 0.55s ease both;
+}
+
+.upload-card {
+    background: var(--card-bg);
+    border-radius: var(--radius-lg);
+    padding: 48px 44px 40px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
+}
+
+/* ---------------------------------------------------------------
+   BRANDING
+--------------------------------------------------------------- */
+.brand-block {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.brand-icon {
+    width: 72px;
+    height: 72px;
+    background: linear-gradient(135deg, var(--primary), #4f46e5);
+    color: #fff;
+    border-radius: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    margin-bottom: 16px;
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.25);
+}
+
+.brand-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-dark);
+    line-height: 1.2;
+    margin-bottom: 8px;
+}
+
+.brand-subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    max-width: 380px;
+    margin: 0 auto;
+}
+
+/* ---------------------------------------------------------------
+   DIVIDER
+--------------------------------------------------------------- */
+.section-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 24px 0;
+}
+
+/* ---------------------------------------------------------------
+   UPLOAD BOXES
+--------------------------------------------------------------- */
+.upload-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.upload-label i {
+    font-size: 15px;
+    color: var(--primary);
+}
+
+.upload-box {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-md);
+    padding: 22px 20px;
+    margin-bottom: 18px;
+    text-align: center;
+    background: var(--bg);
+    transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    cursor: pointer;
+    position: relative;
+}
+
+.upload-box:hover,
+.upload-box.drag-over {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    transform: translateY(-2px);
+}
+
+.upload-box.has-file {
+    border-color: #16a34a;
+    border-style: solid;
+    background: #f0fdf4;
+}
+
+.box-icon {
+    font-size: 36px;
+    color: var(--primary);
+    margin-bottom: 8px;
+    display: block;
+}
+
+.box-icon.pdf-icon { color: #dc2626; }
+
+.box-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+.box-hint {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+.file-input {
+    width: 100%;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.file-name-display {
+    margin-top: 8px;
+    font-size: 12.5px;
+    color: #16a34a;
+    font-weight: 500;
+    min-height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+/* ---------------------------------------------------------------
+   SUBMIT BUTTON
+--------------------------------------------------------------- */
+.submit-btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--primary), #4f46e5);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.30);
+    margin-top: 8px;
+}
+
+.submit-btn:hover:not(:disabled) {
+    opacity: 0.93;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
+}
+
+.submit-btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Loading state */
+.submit-btn .spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+}
+
+.submit-btn.loading .spinner   { display: block; }
+.submit-btn.loading .btn-text  { display: none; }
+
+/* ---------------------------------------------------------------
+   ERROR ALERT
+--------------------------------------------------------------- */
+.alert-error {
+    background: #fee2e2;
+    border: 1px solid #fca5a5;
+    border-radius: var(--radius-md);
+    color: #991b1b;
+    padding: 12px 16px;
+    font-size: 13.5px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.alert-error i {
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+/* ---------------------------------------------------------------
+   FEATURE TAGS
+--------------------------------------------------------------- */
+.feature-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 24px;
+}
+
+.feature-tag {
+    background: #f3f4f6;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+}
+
+/* ---------------------------------------------------------------
+   ANIMATIONS
+--------------------------------------------------------------- */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ---------------------------------------------------------------
+   RESPONSIVE
+--------------------------------------------------------------- */
+@media (max-width: 480px) {
+    .upload-card { padding: 32px 22px 28px; }
+    .brand-icon  { width: 60px; height: 60px; font-size: 28px; }
+    .brand-title { font-size: 19px; }
+}

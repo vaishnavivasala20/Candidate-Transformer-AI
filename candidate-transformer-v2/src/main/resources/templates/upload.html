@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Candidate Transformer AI — Upload</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/upload.css}">
+</head>
+<body>
+
+<div class="page-bg"></div>
+
+<div class="upload-wrapper">
+    <div class="upload-card">
+
+        <!-- Branding -->
+        <div class="brand-block">
+            <div class="brand-icon">
+                <i class="bi bi-person-workspace"></i>
+            </div>
+            <h1 class="brand-title">Candidate Transformer AI</h1>
+            <p class="brand-subtitle">
+                Upload a Recruiter CSV and Candidate Resume PDF to generate a unified AI-powered candidate profile.
+            </p>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Error Message -->
+        <div class="alert-error" th:if="${error != null and !#strings.isEmpty(error)}">
+            <i class="bi bi-exclamation-circle-fill"></i>
+            <span th:text="${error}">An error occurred.</span>
+        </div>
+
+        <!-- Upload Form -->
+        <form method="post" action="/transform" enctype="multipart/form-data" id="uploadForm" novalidate>
+
+            <!-- CSV Upload -->
+            <p class="upload-label">
+                <i class="bi bi-file-earmark-spreadsheet-fill"></i>
+                Recruiter CSV File
+            </p>
+            <div class="upload-box" id="csvBox">
+                <i class="bi bi-file-earmark-spreadsheet box-icon"></i>
+                <p class="box-title">Drag & drop or click to select</p>
+                <p class="box-hint">Exported recruiter CSV with candidate metadata</p>
+                <input class="file-input form-control" type="file" name="csvFile"
+                       id="csvFile" accept=".csv" required>
+                <div class="file-name-display" id="csvFileName"></div>
+            </div>
+
+            <!-- Resume Upload -->
+            <p class="upload-label">
+                <i class="bi bi-file-earmark-pdf-fill"></i>
+                Candidate Resume PDF
+            </p>
+            <div class="upload-box" id="resumeBox">
+                <i class="bi bi-file-earmark-pdf box-icon pdf-icon"></i>
+                <p class="box-title">Drag & drop or click to select</p>
+                <p class="box-hint">Candidate's resume in PDF format</p>
+                <input class="file-input form-control" type="file" name="resumeFile"
+                       id="resumeFile" accept=".pdf" required>
+                <div class="file-name-display" id="resumeFileName"></div>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="submit-btn" id="submitBtn">
+                <div class="spinner"></div>
+                <span class="btn-text">
+                    <i class="bi bi-stars"></i>
+                    Generate Candidate Profile
+                </span>
+            </button>
+
+        </form>
+
+        <!-- Feature Tags -->
+        <div class="feature-tags">
+            <span class="feature-tag"><i class="bi bi-cpu"></i> AI Parsing</span>
+            <span class="feature-tag"><i class="bi bi-file-earmark-person"></i> Resume Analysis</span>
+            <span class="feature-tag"><i class="bi bi-table"></i> CSV Integration</span>
+            <span class="feature-tag"><i class="bi bi-shield-check"></i> ATS Intelligence</span>
+            <span class="feature-tag"><i class="bi bi-download"></i> JSON Export</span>
+        </div>
+
+    </div>
+</div>
+
+<script>
+(function () {
+    // File input → display file name + box state
+    function bindFileInput(inputId, displayId, boxId) {
+        const input   = document.getElementById(inputId);
+        const display = document.getElementById(displayId);
+        const box     = document.getElementById(boxId);
+        if (!input) return;
+
+        input.addEventListener('change', function () {
+            if (this.files && this.files.length > 0) {
+                const name = this.files[0].name;
+                display.innerHTML = '<i class="bi bi-check-circle-fill" style="color:#16a34a"></i> ' + name;
+                box.classList.add('has-file');
+            } else {
+                display.innerHTML = '';
+                box.classList.remove('has-file');
+            }
+        });
+
+        // Drag & drop visual feedback
+        box.addEventListener('dragover', function (e) {
+            e.preventDefault();
+            box.classList.add('drag-over');
+        });
+        box.addEventListener('dragleave', function () {
+            box.classList.remove('drag-over');
+        });
+        box.addEventListener('drop', function (e) {
+            e.preventDefault();
+            box.classList.remove('drag-over');
+            if (e.dataTransfer.files.length > 0) {
+                // Assign dropped file to input
+                const dt = new DataTransfer();
+                dt.items.add(e.dataTransfer.files[0]);
+                input.files = dt.files;
+                input.dispatchEvent(new Event('change'));
+            }
+        });
+    }
+
+    bindFileInput('csvFile',    'csvFileName',    'csvBox');
+    bindFileInput('resumeFile', 'resumeFileName', 'resumeBox');
+
+    // Loading state on submit
+    const form = document.getElementById('uploadForm');
+    const btn  = document.getElementById('submitBtn');
+    if (form && btn) {
+        form.addEventListener('submit', function (e) {
+            const csvFile    = document.getElementById('csvFile');
+            const resumeFile = document.getElementById('resumeFile');
+            if (!csvFile.files.length || !resumeFile.files.length) return; // HTML5 validation handles it
+            btn.classList.add('loading');
+            btn.disabled = true;
+        });
+    }
+})();
+</script>
+
+</body>
+</html>
